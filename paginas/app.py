@@ -1,5 +1,6 @@
 from flask import Flask
 
+from .database import database
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -16,5 +17,13 @@ def create_app(test_config=None):
 
     from .applications.blueprint_1 import bp as blueprint_1
     app.register_blueprint(blueprint_1)
+
+    print("Initializing DB")
+    database.init_app(app)
+    with app.test_request_context():
+        database.create_all()
+
+
+    print("DB Initialized successfully")
 
     return app
